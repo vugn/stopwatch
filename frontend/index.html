@@ -1,0 +1,63 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>ICP Stopwatch</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        padding: 40px;
+        background: #f6f6f6;
+        text-align: center;
+      }
+      h1 {
+        font-size: 2rem;
+      }
+      #elapsed {
+        font-size: 2.5rem;
+        margin: 20px 0;
+      }
+      button {
+        margin: 5px;
+        padding: 10px 20px;
+        font-size: 1rem;
+        cursor: pointer;
+      }
+    </style>
+   <script type="module">
+  import { backend } from 'declarations/backend';
+
+  // Ganti semua 'stopwatch_backend' → 'backend'
+  const elapsedElem = document.getElementById("elapsed");
+
+  document.getElementById("startBtn").onclick = async () => {
+    await backend.start();
+  };
+
+  document.getElementById("stopBtn").onclick = async () => {
+    await backend.stop();
+  };
+
+  document.getElementById("resetBtn").onclick = async () => {
+    await backend.reset();
+    elapsedElem.textContent = "0.00 ms";
+  };
+
+  async function updateElapsed() {
+    const result = await backend.getElapsed();
+    elapsedElem.textContent = (Number(result) / 1_000_000).toFixed(2) + " ms";
+  }
+
+  setInterval(updateElapsed, 500);
+</script>
+  </head>
+  <body>
+    <main>
+      <h1>⏱️ ICP Stopwatch</h1>
+      <div id="elapsed">0.00 ms</div>
+      <button id="startBtn">Start</button>
+      <button id="stopBtn">Stop</button>
+      <button id="resetBtn">Reset</button>
+    </main>
+  </body>
+</html>
